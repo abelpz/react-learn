@@ -1,0 +1,749 @@
+<!--
+author: Tu nombre (edítalo)
+version: 1.0.0
+language: es
+title: React para principiantes — Renderiza con .map() y .filter() sin hooks
+comment: Curso autodidacta orientado a personas que solo conocen HTML y algo de Tailwind CSS.
+narrator: es-ES
+-->
+
+# React para principiantes — Renderiza con .map() y .filter() sin hooks
+
+Bienvenida/o. Este curso está pensado para quienes vienen de HTML y algo de Tailwind CSS, sin experiencia previa en JavaScript. Aquí aprenderás a:
+
+- Renderizar listas en React usando `.map()`
+- Seleccionar datos con `.filter()`
+- Pasar información entre componentes usando props
+
+Sin usar `useState`, `useEffect` ni ningún hook. Todo es estático y claro.
+
+> Nota: Este curso está escrito en formato LiaScript. Puedes abrirlo directamente en el navegador usando el visor de LiaScript. Más info en `https://liascript.github.io/`.
+
+### Modo aventura (¡hazlo divertido!)
+
+- **Insignias que puedes ganar**:
+  - 🏁 Maestro de `.map()`
+  - 🔎 Detective de `.filter()`
+  - 🧩 Domador de Props
+  - 🧙 Hechicero del Render Condicional
+- **Easter eggs**: añade mensajes con `console.log("👋 Hola desde React")` y mira la consola del navegador.
+
+## Cómo usar este curso
+
+- Puedes leerlo completo como una guía.
+- Copia y pega los fragmentos de código en tu proyecto Vite + React.
+- Sigue las tareas marcadas como checklist.
+
+> Si utilizas Tailwind CSS, los estilos se verán tal como en los ejemplos. Si no lo usas, el contenido igualmente se renderiza; solo cambiará la apariencia.
+
+---
+
+## 1) ¿Qué es un componente en React?
+
+Piensa en HTML, pero con etiquetas propias y reutilizables. En HTML escribes:
+
+```html
+<div>
+  <h1>Mi título</h1>
+  <p>Mi párrafo</p>
+</div>
+```
+
+En React puedes crear tus propias "etiquetas" personalizadas (componentes):
+
+```jsx
+<MiComponente />
+```
+
+Un componente es una función que devuelve algo muy similar a HTML llamado JSX.
+
+```jsx
+// Un componente básico
+function Saludo() {
+  return (
+    <div>
+      <h1>¡Hola mundo!</h1>
+      <p>Este es mi primer componente</p>
+    </div>
+  );
+}
+```
+
+Puedes usar componentes dentro de otros componentes:
+
+```jsx
+function App() {
+  return (
+    <div>
+      <Saludo />
+      <Saludo />
+      <Saludo />
+    </div>
+  );
+}
+```
+
+Idea clave: Un componente es un molde reutilizable. Úsalo tantas veces como necesites.
+
+---
+
+## 2) Props: la forma en que fluyen los datos
+
+Los props son "atributos" que le pasas a un componente para personalizarlo. Si un componente es un molde de galletas, los props son los ingredientes que cambias para obtener galletas diferentes.
+
+```jsx
+function TarjetaPersona(props) {
+  return (
+    <div className="border p-4 rounded">
+      <h2>{props.nombre}</h2>
+      <p>{props.edad} años</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <TarjetaPersona nombre="Ana" edad="25" />
+      <TarjetaPersona nombre="Carlos" edad="30" />
+    </div>
+  );
+}
+```
+
+Usa `console.log` para ver qué props llegan:
+
+```jsx
+function TarjetaPersona(props) {
+  console.log("Props recibidos:", props);
+  return (
+    <div className="border p-4 rounded">
+      <h2>{props.nombre}</h2>
+      <p>{props.edad} años</p>
+    </div>
+  );
+}
+```
+
+Abre las Herramientas de Desarrollo del navegador (F12) y mira la pestaña "Console".
+
+---
+
+## 3) `.map()` en React: crea elementos repetidos a partir de una lista
+
+En vez de escribir muchas veces el mismo HTML, `.map()` recorre una lista y devuelve un elemento por cada ítem.
+
+```jsx
+const amigos = ["Ana", "Carlos", "María"];
+amigos.map((nombre) => <p>Hola {nombre}</p>);
+```
+
+Resultado:
+
+```html
+<p>Hola Ana</p>
+<p>Hola Carlos</p>
+<p>Hola María</p>
+```
+
+---
+
+## 4) Crea el proyecto con Vite (React, JavaScript)
+
+Ejecuta estos comandos en la terminal, uno por uno:
+
+```bash
+# Crear proyecto (elige plantilla react)
+npm create vite@latest mi-proyecto-react -- --template react
+
+# Entra a la carpeta del proyecto
+cd mi-proyecto-react
+
+# Instala dependencias
+npm install
+
+# Abre en VSCode
+code .
+
+# Inicia el servidor de desarrollo
+npm run dev
+```
+
+Abre `http://localhost:5173`. Luego limpia `src/App.jsx` y deja algo básico:
+
+```jsx
+function App() {
+  return (
+    <div className="p-8">
+      <h1 className="text-2xl font-bold">¡Mi primera app de React!</h1>
+    </div>
+  );
+}
+
+export default App;
+```
+
+> Tailwind opcional: Si no lo tienes configurado, las clases no afectarán al estilo. El contenido seguirá funcionando.
+
+- [ ] Crear el proyecto con Vite
+- [ ] Abrir en VSCode con `code .`
+- [ ] Ejecutar `npm run dev`
+
+---
+
+## 5) Ejercicios progresivos (diversión + práctica real)
+
+Regla: No usaremos hooks ni lógica interactiva. Solo props, `.map()` y `.filter()`.
+
+### Ejercicio 1 — Fórmula 1: Lista simple con nombre y equipo
+
+Misión: Tu escudería necesita una página con los pilotos destacados. Renderiza la grilla de pilotos a partir de un array.
+
+```jsx
+function TarjetaPiloto(props) {
+  // console.log("Props del piloto:", props);
+  return (
+    <div className="bg-white border-2 border-gray-200 rounded-lg p-4 shadow-md">
+      <div className="flex items-center gap-3 mb-2">
+        <div className="text-2xl" title={props.nacionalidad}>{props.bandera}</div>
+        <h3 className="text-xl font-bold text-red-600">#{props.numero} {props.nombre}</h3>
+      </div>
+      <p className="text-gray-700">
+        Equipo: <span className="font-medium">{props.equipo}</span>
+      </p>
+      <p className="text-gray-600">Nacionalidad: {props.nacionalidad}</p>
+      <div className="mt-2 text-sm text-gray-600">
+        <p>Victorias totales: {props.victorias}</p>
+        <p>Podios: {props.podios}</p>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const pilotos = [
+    { nombre: "Max Verstappen", numero: 1, equipo: "Red Bull Racing", nacionalidad: "Holanda", bandera: "🇳🇱", victorias: 60, podios: 100 },
+    { nombre: "Lewis Hamilton", numero: 44, equipo: "Mercedes", nacionalidad: "Reino Unido", bandera: "🇬🇧", victorias: 103, podios: 197 },
+    { nombre: "Charles Leclerc", numero: 16, equipo: "Ferrari", nacionalidad: "Mónaco", bandera: "🇲🇨", victorias: 6, podios: 40 },
+    { nombre: "Lando Norris", numero: 4, equipo: "McLaren", nacionalidad: "Reino Unido", bandera: "🇬🇧", victorias: 1, podios: 20 },
+    { nombre: "George Russell", numero: 63, equipo: "Mercedes", nacionalidad: "Reino Unido", bandera: "🇬🇧", victorias: 1, podios: 12 },
+    { nombre: "Carlos Sainz", numero: 55, equipo: "Ferrari", nacionalidad: "España", bandera: "🇪🇸", victorias: 3, podios: 25 },
+    { nombre: "Fernando Alonso", numero: 14, equipo: "Aston Martin", nacionalidad: "España", bandera: "🇪🇸", victorias: 32, podios: 106 }
+  ];
+
+  // 🎉 Easter egg de consola
+  console.log("🏁 Pilotos listos:", pilotos.length);
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-8">
+      <h1 className="text-3xl font-bold text-center mb-8">🏎️ Pilotos de F1 2024</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {pilotos.map((piloto) => (
+          <TarjetaPiloto 
+            nombre={piloto.nombre}
+            numero={piloto.numero}
+            equipo={piloto.equipo}
+            nacionalidad={piloto.nacionalidad}
+            bandera={piloto.bandera}
+            victorias={piloto.victorias}
+            podios={piloto.podios}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+- [ ] Descomenta el `console.log` y mira la consola del navegador
+- [ ] Agrega un nuevo piloto
+- [ ] Cambia estilos con Tailwind
+
+🎉 Modo diversión
+- **Insignia**: 🏁 Maestro de `.map()` si logras mostrar 9+ pilotos
+- **Easter egg**: cambia temporalmente el `map` a forma con llaves para ver cada nombre:
+  ```jsx
+  {pilotos.map((piloto) => {
+    console.log("⏩ Iterando piloto:", piloto.nombre);
+    return <TarjetaPiloto {...piloto} />;
+  })}
+  ```
+- **Bonus**: muestra una medalla 🥇 junto al nombre si `victorias > 50`
+
+---
+
+### Ejercicio 2 — The Big Bang Theory: Más props por componente
+
+Misión: Un fan club te pidió tarjetas con detalles de los personajes. Agrega más props y rinde homenaje a sus profesiones y personalidades.
+
+```jsx
+function TarjetaPersonaje(props) {
+  return (
+    <div className="bg-gradient-to-br from-blue-50 to-purple-50 border border-purple-200 rounded-xl p-6 shadow-lg">
+      <div className="text-center">
+        <div className="text-4xl mb-2">{props.emoji}</div>
+        <h3 className="text-xl font-bold text-purple-800">{props.nombre}</h3>
+        <p className="text-purple-600 font-medium">{props.profesion}</p>
+        <p className="text-gray-600 mt-2">{props.descripcion}</p>
+        <div className="mt-3 text-sm text-gray-700">
+          <p>Ciudad: {props.ciudad}</p>
+          <p>Nivel geek: {props.nivelGeek}/10</p>
+        </div>
+        {props.cita && (
+          <p className="mt-3 italic text-purple-700">“{props.cita}”</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const personajes = [
+    { nombre: "Sheldon Cooper", profesion: "Físico Teórico", descripcion: "Genio obsesivo con falta de habilidades sociales", emoji: "🤓", ciudad: "Pasadena", nivelGeek: 10, cita: "Bazinga!" },
+    { nombre: "Leonard Hofstadter", profesion: "Físico Experimental", descripcion: "El más normal del grupo", emoji: "👨‍🔬", ciudad: "Pasadena", nivelGeek: 8, cita: "Somos amigos, Sheldon." },
+    { nombre: "Penny", profesion: "Actriz/Camarera", descripcion: "Vecina y mejor amiga del grupo", emoji: "👱‍♀️", ciudad: "Pasadena", nivelGeek: 4 },
+    { nombre: "Howard Wolowitz", profesion: "Ingeniero Aeroespacial", descripcion: "Ingeniero con complejo de mamá", emoji: "👨‍🚀", ciudad: "Pasadena", nivelGeek: 7 },
+    { nombre: "Raj Koothrappali", profesion: "Astrofísico", descripcion: "No puede hablar con mujeres (sin alcohol)", emoji: "🔭", ciudad: "Pasadena", nivelGeek: 7 },
+    { nombre: "Amy Farrah Fowler", profesion: "Neurobióloga", descripcion: "Novia de Sheldon, igual de peculiar", emoji: "🧠", ciudad: "Pasadena", nivelGeek: 9 },
+    { nombre: "Bernadette", profesion: "Microbióloga", descripcion: "Esposa de Howard, pequeña pero temible", emoji: "🔬", ciudad: "Pasadena", nivelGeek: 8 }
+  ];
+
+  console.log("Lista completa de personajes:", personajes);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 p-8">
+      <h1 className="text-4xl font-bold text-center mb-2 text-purple-800">🧪 The Big Bang Theory</h1>
+      <p className="text-center text-purple-600 mb-8">Los genios más divertidos de la TV</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {personajes.map((personaje) => (
+          <TarjetaPersonaje 
+            nombre={personaje.nombre}
+            profesion={personaje.profesion}
+            descripcion={personaje.descripcion}
+            emoji={personaje.emoji}
+            ciudad={personaje.ciudad}
+            nivelGeek={personaje.nivelGeek}
+            cita={personaje.cita}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+- [ ] Agrega una prop `coeficienteIntelectual` (CI) a algunos personajes
+- [ ] Muestra el CI solo si existe
+- [ ] Cambia emojis y descripciones
+
+🎉 Modo diversión
+- **Insignia**: 🧩 Domador de Props si agregas 3 props nuevas a 3 personajes
+- **Easter egg**: imprime en consola quién tiene el mayor `nivelGeek`
+- **Bonus**: si `nivelGeek >= 9`, muestra una etiqueta “ULTRA GEEK 💥” debajo del nombre
+
+---
+
+### Ejercicio 3 — Piratas del Caribe: Propiedades anidadas
+
+Misión: Un museo naval necesita fichas con habilidades y barcos de piratas famosos. Trabaja con objetos que contienen objetos.
+
+```jsx
+function TarjetaPirata(props) {
+  console.log("Datos del pirata:", props);
+  return (
+    <div className="bg-gradient-to-br from-amber-50 to-red-50 border-2 border-amber-400 rounded-lg p-6 shadow-xl">
+      <div className="text-center">
+        <div className="text-5xl mb-3">{props.emoji}</div>
+        <h3 className="text-2xl font-bold text-amber-800">{props.nombre}</h3>
+        <p className="text-red-700 font-bold">{props.titulo}</p>
+        <div className="mt-4 bg-amber-100 p-3 rounded">
+          <h4 className="font-bold text-amber-800">⚔️ Habilidades</h4>
+          <p>Espada: {props.habilidades.espada}/10</p>
+          <p>Navegación: {props.habilidades.navegacion}/10</p>
+          <p>Liderazgo: {props.habilidades.liderazgo}/10</p>
+        </div>
+        <div className="mt-3 bg-red-100 p-3 rounded">
+          <h4 className="font-bold text-red-800">🚢 Barco</h4>
+          <p>{props.barco.nombre}</p>
+          <p className="text-sm text-gray-600">{props.barco.tipo}</p>
+        </div>
+        <div className="mt-3 bg-yellow-100 p-3 rounded">
+          <h4 className="font-bold text-yellow-800">💰 Recompensa</h4>
+          <p>{props.recompensa.monedas} monedas — {props.recompensa.estado}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const piratas = [
+    { nombre: "Jack Sparrow", titulo: "Capitán del Perla Negra", emoji: "🏴‍☠️", habilidades: { espada: 8, navegacion: 10, liderazgo: 7 }, barco: { nombre: "Perla Negra", tipo: "Galeón" }, recompensa: { monedas: 50000, estado: "Vivo o Muerto" } },
+    { nombre: "Barbossa", titulo: "Capitán Maldito", emoji: "💀", habilidades: { espada: 9, navegacion: 8, liderazgo: 9 }, barco: { nombre: "Perla Negra", tipo: "Galeón" }, recompensa: { monedas: 80000, estado: "Vivo o Muerto" } },
+    { nombre: "Will Turner", titulo: "Herrero y Pirata", emoji: "⚔️", habilidades: { espada: 10, navegacion: 6, liderazgo: 8 }, barco: { nombre: "Holandés Errante", tipo: "Barco Fantasma" }, recompensa: { monedas: 30000, estado: "Vivo" } },
+    { nombre: "Elizabeth Swann", titulo: "Rey de los Piratas", emoji: "👑", habilidades: { espada: 7, navegacion: 7, liderazgo: 10 }, barco: { nombre: "Emperatriz", tipo: "Junco Chino" }, recompensa: { monedas: 70000, estado: "Vivo" } },
+    { nombre: "Davy Jones", titulo: "Señor de los Mares", emoji: "🐙", habilidades: { espada: 9, navegacion: 10, liderazgo: 10 }, barco: { nombre: "Holandés Errante", tipo: "Barco Fantasma" }, recompensa: { monedas: 100000, estado: "Muerto o Vivo" } },
+    { nombre: "Blackbeard", titulo: "El Pirata más Temido", emoji: "🔥", habilidades: { espada: 10, navegacion: 9, liderazgo: 9 }, barco: { nombre: "Venganza de la Reina Ana", tipo: "Fragata" }, recompensa: { monedas: 120000, estado: "Vivo o Muerto" } },
+    { nombre: "Angelica", titulo: "Hija de Blackbeard", emoji: "⚡", habilidades: { espada: 8, navegacion: 7, liderazgo: 8 }, barco: { nombre: "Venganza de la Reina Ana", tipo: "Fragata" }, recompensa: { monedas: 45000, estado: "Vivo" } }
+  ];
+
+  // 🎉 Easter egg de consola
+  console.log("🏴‍☠️ Recuento de piratas:", piratas.length);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 to-amber-900 p-8">
+      <h1 className="text-4xl font-bold text-center mb-2 text-amber-300">🏴‍☠️ Piratas del Caribe</h1>
+      <p className="text-center text-amber-100 mb-8">Los más legendarios bucaneros de los siete mares</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        {piratas.map((pirata) => (
+          <TarjetaPirata 
+            nombre={pirata.nombre}
+            titulo={pirata.titulo}
+            emoji={pirata.emoji}
+            habilidades={pirata.habilidades}
+            barco={pirata.barco}
+            recompensa={pirata.recompensa}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+- [ ] Observa en consola los objetos anidados
+- [ ] Agrega `tesoro: { cantidad, tipo }` y muéstralo
+- [ ] Cambia valores de habilidades y revisa cómo se renderizan
+
+🎉 Modo diversión
+- **Insignia**: 💰 Cazador de Tesoros si agregas y muestras `tesoro` en los 7 piratas
+- **Easter egg**: en consola, muestra la suma de `recompensa.monedas` de todos los piratas
+- **Bonus**: si `habilidades.espada >= 9`, añade un ícono ⚔️ junto al nombre
+
+---
+
+### Ejercicio 4 — El Señor de los Anillos: `.filter()` + `.map()`
+
+Misión: La biblioteca de Minas Tirith necesita listados filtrados por raza y origen. Crea secciones aplicando filtros.
+
+```jsx
+function TarjetaPersonaje(props) {
+  const obtenerColorRaza = (raza) => {
+    switch (raza) {
+      case "Hobbit": return "bg-green-100 border-green-400 text-green-800";
+      case "Humano": return "bg-blue-100 border-blue-400 text-blue-800";
+      case "Elfo": return "bg-purple-100 border-purple-400 text-purple-800";
+      case "Enano": return "bg-red-100 border-red-400 text-red-800";
+      case "Mago": return "bg-yellow-100 border-yellow-400 text-yellow-800";
+      default: return "bg-gray-100 border-gray-400 text-gray-800";
+    }
+  };
+
+  const obtenerColorEstado = (vivo) => (vivo ? "bg-green-200 text-green-800" : "bg-gray-300 text-gray-700");
+
+  return (
+    <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-400 rounded-lg p-6 shadow-lg">
+      <div className="text-center">
+        <div className="text-4xl mb-2">{props.emoji}</div>
+        <h3 className="text-xl font-bold text-amber-800">{props.nombre}</h3>
+        <div className="flex items-center justify-center gap-2 mt-2">
+          <div className={`inline-block px-3 py-1 rounded-full text-sm font-bold ${obtenerColorRaza(props.raza)}`}>{props.raza}</div>
+          {typeof props.vivo !== 'undefined' && (
+            <div className={`inline-block px-3 py-1 rounded-full text-sm font-bold ${obtenerColorEstado(props.vivo)}`}>{props.vivo ? 'Vivo' : 'Caído'}</div>
+          )}
+        </div>
+        <p className="mt-3 text-gray-700">{props.descripcion}</p>
+        <div className="mt-4 bg-amber-100 p-3 rounded">
+          <h4 className="font-bold text-amber-800">⚔️ Arma</h4>
+          <p>{props.arma}</p>
+        </div>
+        <div className="mt-2 bg-orange-100 p-3 rounded">
+          <h4 className="font-bold text-orange-800">🏠 Origen</h4>
+          <p>{props.origen}</p>
+        </div>
+        {props.alineacion && (
+          <div className="mt-2">
+            <span className="inline-block bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-semibold">{props.alineacion}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const personajes = [
+    { nombre: "Frodo Baggins", raza: "Hobbit", descripcion: "Portador del Anillo Único", arma: "Dardo y Mithril", origen: "Bolsón Cerrado", alineacion: "Bien", vivo: true, emoji: "🧙‍♂️" },
+    { nombre: "Aragorn", raza: "Humano", descripcion: "Rey de Gondor", arma: "Andúril", origen: "Gondor", alineacion: "Bien", vivo: true, emoji: "👑" },
+    { nombre: "Legolas", raza: "Elfo", descripcion: "Príncipe de los Elfos del Bosque", arma: "Arco Élfico", origen: "Reino del Bosque", alineacion: "Bien", vivo: true, emoji: "🏹" },
+    { nombre: "Gimli", raza: "Enano", descripcion: "Guerrero de la Montaña Solitaria", arma: "Hacha de Guerra", origen: "Erebor", alineacion: "Bien", vivo: true, emoji: "⚔️" },
+    { nombre: "Gandalf", raza: "Mago", descripcion: "El Gris que se volvió Blanco", arma: "Bastón y Glamdring", origen: "Valinor", alineacion: "Bien", vivo: true, emoji: "🧙‍♂️" },
+    { nombre: "Boromir", raza: "Humano", descripcion: "Hijo del Senescal de Gondor", arma: "Espada y Escudo", origen: "Minas Tirith", alineacion: "Bien", vivo: false, emoji: "🛡️" },
+    { nombre: "Sam Gamyi", raza: "Hobbit", descripcion: "Fiel jardinero y amigo", arma: "Dardo", origen: "Bolsón Cerrado", alineacion: "Bien", vivo: true, emoji: "🌱" }
+  ];
+
+  const hobbits = personajes.filter((p) => p.raza === "Hobbit");
+  const humanos = personajes.filter((p) => p.raza === "Humano");
+  console.log("Solo Hobbits:", hobbits);
+  console.log("Solo Humanos:", humanos);
+  console.log("📚 Total de personajes:", personajes.length);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 to-orange-900 p-8">
+      <h1 className="text-4xl font-bold text-center mb-2 text-amber-300">💍 El Señor de los Anillos</h1>
+      <p className="text-center text-amber-100 mb-8">La Comunidad del Anillo</p>
+
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-amber-300 mb-4 text-center">🌟 Todos los Personajes</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          {personajes.map((personaje) => (
+            <TarjetaPersonaje {...personaje} />
+          ))}
+        </div>
+      </div>
+
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-green-300 mb-4 text-center">🌿 Solo Hobbits</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {hobbits.map((hobbit) => (
+            <TarjetaPersonaje {...hobbit} />
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-bold text-blue-300 mb-4 text-center">👑 Solo Humanos</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {humanos.map((humano) => (
+            <TarjetaPersonaje {...humano} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+- [ ] Crea un filtro para mostrar solo Elfos y Magos
+- [ ] Filtra por `origen`
+- [ ] Observa en consola cómo `.filter()` produce nuevos arrays
+
+🎉 Modo diversión
+- **Insignia**: 🔎 Detective de `.filter()` si creas 3 secciones distintas (por raza/origen)
+- **Easter egg**: imprime en consola los nombres de todos los “Hobbit” con `map((h) => h.nombre)`
+- **Bonus**: añade una banda “HÉROE ⭐” si `alineacion === 'Bien'` y `vivo === true`
+
+---
+
+### Ejercicio 5 — Harry Potter: Datos complejos + condicionales
+
+Misión: El departamento de Hogwarts quiere fichas detalladas con hechizos (array), atributos (objeto) y varita (opcional). También necesitan secciones filtradas.
+
+```jsx
+function TarjetaPersonaje(props) {
+  const obtenerColorCasa = (casa) => {
+    switch (casa) {
+      case "Gryffindor": return "bg-red-500 text-white";
+      case "Slytherin": return "bg-green-600 text-white";
+      case "Ravenclaw": return "bg-blue-500 text-white";
+      case "Hufflepuff": return "bg-yellow-500 text-black";
+      default: return "bg-gray-500 text-white";
+    }
+  };
+
+  return (
+    <div className="bg-white border-2 border-purple-300 rounded-xl p-6 shadow-xl">
+      <div className="text-center">
+        <div className="text-4xl mb-2">{props.emoji}</div>
+        <h3 className="text-xl font-bold text-purple-800">{props.nombre}</h3>
+        {props.casa && (
+          <div className={`inline-block px-3 py-1 rounded-full text-sm font-bold mt-2 ${obtenerColorCasa(props.casa)}`}>{props.casa}</div>
+        )}
+        <p className="mt-3 text-gray-700">{props.descripcion}</p>
+        <div className="mt-4 bg-purple-100 p-3 rounded">
+          <h4 className="font-bold text-purple-800">✨ Hechizos Favoritos</h4>
+          <div className="text-sm">
+            {props.hechizos.map((hechizo) => (
+              <span className="inline-block bg-purple-200 px-2 py-1 rounded m-1">{hechizo}</span>
+            ))}
+          </div>
+        </div>
+        {props.clubes && props.clubes.length > 0 && (
+          <div className="mt-3 bg-indigo-100 p-3 rounded">
+            <h4 className="font-bold text-indigo-800">🏫 Clubes</h4>
+            <div className="text-sm">
+              {props.clubes.map((club) => (
+                <span className="inline-block bg-indigo-200 px-2 py-1 rounded m-1">{club}</span>
+              ))}
+            </div>
+          </div>
+        )}
+        <div className="mt-3 bg-blue-100 p-3 rounded">
+          <h4 className="font-bold text-blue-800">🎯 Características</h4>
+          <div className="text-sm text-left">
+            <p>Valentía: {props.atributos.valentia}/10</p>
+            <p>Inteligencia: {props.atributos.inteligencia}/10</p>
+            <p>Poder Mágico: {props.atributos.poderMagico}/10</p>
+          </div>
+        </div>
+        {props.varita && (
+          <div className="mt-3 bg-amber-100 p-3 rounded">
+            <h4 className="font-bold text-amber-800">🪄 Varita</h4>
+            <p className="text-sm">{props.varita.descripcion}</p>
+            <p className="text-xs text-gray-600">{props.varita.nucleo}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const personajes = [
+    { nombre: "Harry Potter", casa: "Gryffindor", descripcion: "El niño que vivió", emoji: "⚡", hechizos: ["Expelliarmus", "Expecto Patronum", "Lumos"], clubes: ["Quidditch", "Ejército de Dumbledore"], atributos: { valentia: 10, inteligencia: 7, poderMagico: 9 }, varita: { descripcion: "Acebo, 11 pulgadas", nucleo: "Pluma de fénix" } },
+    { nombre: "Hermione Granger", casa: "Gryffindor", descripcion: "La bruja más brillante de su generación", emoji: "📚", hechizos: ["Wingardium Leviosa", "Alohomora", "Protean Charm"], clubes: ["Ejército de Dumbledore", "Sociedad de Defensa"], atributos: { valentia: 8, inteligencia: 10, poderMagico: 9 }, varita: { descripcion: "Vid, 10¾ pulgadas", nucleo: "Fibra de corazón de dragón" } },
+    { nombre: "Ron Weasley", casa: "Gryffindor", descripcion: "Fiel amigo y estratega de ajedrez", emoji: "♟️", hechizos: ["Sunshine, Daisies", "Eat Slugs", "Expelliarmus"], clubes: ["Quidditch"], atributos: { valentia: 8, inteligencia: 6, poderMagico: 7 }, varita: { descripcion: "Sauce, 14 pulgadas", nucleo: "Pelo de unicornio" } },
+    { nombre: "Draco Malfoy", casa: "Slytherin", descripcion: "Rival de Harry y heredero sangre pura", emoji: "🐍", hechizos: ["Serpensortia", "Tarantallegra", "Crucio"], clubes: ["Club de Slug"], atributos: { valentia: 6, inteligencia: 8, poderMagico: 8 }, varita: { descripcion: "Espino, 10 pulgadas", nucleo: "Pelo de unicornio" } },
+    { nombre: "Luna Lovegood", casa: "Ravenclaw", descripcion: "Excéntrica y sabia soñadora", emoji: "🌙", hechizos: ["Expecto Patronum", "Stupefy", "Revelio"], clubes: ["El Quisquilloso"], atributos: { valentia: 7, inteligencia: 9, poderMagico: 8 }, varita: { descripcion: "Cerezo, 9 pulgadas", nucleo: "Pelo de thestrals" } },
+    { nombre: "Neville Longbottom", casa: "Gryffindor", descripcion: "De tímido estudiante a héroe valiente", emoji: "🌱", hechizos: ["Petrificus Totalus", "Expelliarmus", "Stupefy"], clubes: ["Herbología", "Ejército de Dumbledore"], atributos: { valentia: 9, inteligencia: 6, poderMagico: 7 }, varita: { descripcion: "Cerezo, 13 pulgadas", nucleo: "Pelo de unicornio" } },
+    { nombre: "Severus Snape", casa: "Slytherin", descripcion: "Profesor de Pociones y espía doble", emoji: "🧪", hechizos: ["Sectumsempra", "Legilimens", "Protego"], clubes: [], atributos: { valentia: 8, inteligencia: 10, poderMagico: 10 }, varita: { descripcion: "Abedul, 13¼ pulgadas", nucleo: "Fibra de corazón de dragón" } },
+    { nombre: "Dobby", casa: null, descripcion: "Elfo doméstico libre y leal amigo", emoji: "🧦", hechizos: ["Magia Élfica", "Aparición", "Levitación"], clubes: [], atributos: { valentia: 10, inteligencia: 7, poderMagico: 8 }, varita: null }
+  ];
+
+  const estudiantesGryffindor = personajes.filter((p) => p.casa === "Gryffindor");
+  const personajesPoderosos = personajes.filter((p) => p.atributos.poderMagico >= 9);
+  const personajesConVarita = personajes.filter((p) => p.varita !== null);
+
+  console.log("Estudiantes de Gryffindor:", estudiantesGryffindor);
+  console.log("Personajes poderosos:", personajesPoderosos);
+  console.log("🪄 Total de personajes:", personajes.length);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-blue-900 p-8">
+      <h1 className="text-4xl font-bold text-center mb-2 text-yellow-300">⚡ Harry Potter</h1>
+      <p className="text-center text-yellow-100 mb-8">El Mundo Mágico de Hogwarts</p>
+
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-yellow-300 mb-4 text-center">🏰 Todos los Personajes</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          {personajes.map((personaje) => (
+            <TarjetaPersonaje {...personaje} />
+          ))}
+        </div>
+      </div>
+
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-red-300 mb-4 text-center">🦁 Casa Gryffindor</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          {estudiantesGryffindor.map((p) => (
+            <TarjetaPersonaje {...p} />
+          ))}
+        </div>
+      </div>
+
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-purple-300 mb-4 text-center">💫 Magos Poderosos (Poder ≥ 9)</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          {personajesPoderosos.map((p) => (
+            <TarjetaPersonaje {...p} />
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-bold text-amber-300 mb-4 text-center">🪄 Portadores de Varita</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          {personajesConVarita.map((p) => (
+            <TarjetaPersonaje {...p} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+- [ ] Crea una sección para Slytherin
+- [ ] Filtra por `inteligencia >= 8`
+- [ ] Agrega un nuevo personaje con `hechizos`, `atributos` y `varita`
+- [ ] Añade un condicional extra (por ejemplo, mostrar un aviso si no tiene varita)
+
+🎉 Modo diversión
+- **Insignia**: 🧙 Hechicero del Render Condicional si usas 3 condicionales distintos (casa, varita, clubes)
+- **Easter egg**: imprime en consola solo los nombres de `personajesConVarita`
+- **Bonus**: muestra un rayo ⚡ junto al nombre si `atributos.poderMagico >= 9`
+
+---
+
+## 6) Conceptos clave aprendidos
+
+1. Componentes como funciones (molde reutilizable)
+2. Props: cómo fluyen los datos del padre al hijo
+3. Listas con `.map()`
+4. Filtros con `.filter()`
+5. Objetos anidados y arrays dentro de objetos
+6. Renderizado condicional
+7. Uso de `console.log` para entender el flujo de datos
+
+Patrón típico:
+
+```jsx
+const datos = [...];
+
+function Item(props) {
+  return <div>{props.nombre}</div>;
+}
+
+function App() {
+  return (
+    <div>
+      {datos.map((item) => (
+        <Item nombre={item.nombre} />
+      ))}
+    </div>
+  );
+}
+```
+
+---
+
+## 7) Próximos pasos
+
+- Experimenta combinando filtros con `&&` y `||`
+- Crea componentes más profundos (varios niveles)
+- Juega con estilos (con o sin Tailwind)
+
+Aprende después:
+
+- `useState` para interactividad
+- `useEffect` para cargar datos
+- Eventos (onClick, onChange)
+
+---
+
+## 8) Consejos rápidos
+
+- Usa `console.log` para ver qué datos recibes en cada componente
+- Revisa la consola con F12
+- Asegúrate de escribir los nombres de propiedades correctamente
+
+---
+
+## Cómo abrir este curso en LiaScript
+
+- Puedes usar el visor web: `https://liascript.github.io/`
+- Si tu archivo está en GitHub, usa el formato de carga por URL (copia el enlace RAW de tu `.lia` o `.md`).
+
+[Documentación de LiaScript](https://liascript.github.io/)
+
+
