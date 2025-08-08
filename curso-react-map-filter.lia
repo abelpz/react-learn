@@ -15,7 +15,7 @@ Bienvenida/o. Este curso está pensado para quienes vienen de HTML y algo de Tai
 - Seleccionar datos con `.filter()`
 - Pasar información entre componentes usando props
 
-Sin usar `useState`, `useEffect` ni ningún hook. Todo es estático y claro.
+Nos enfocaremos en renderizado estático con props, `.map()` y `.filter()`.
 
 > Nota: Este curso está escrito en formato LiaScript. Puedes abrirlo directamente en el navegador usando el visor de LiaScript. Más info en `https://liascript.github.io/`.
 
@@ -85,11 +85,27 @@ function App() {
 
 Idea clave: Un componente es un molde reutilizable. Úsalo tantas veces como necesites.
 
+### ¿Por qué son útiles los componentes?
+
+- **Reutilización**: Si tienes la misma tarjeta de perfil repetida 20 veces con datos distintos, creas una sola `TarjetaPerfil` y la usas con props diferentes.
+- **Organización**: Dividir tu interfaz en piezas pequeñas y claras hace el código más fácil de leer y mantener.
+- **Consistencia visual**: Un cambio en el componente se refleja en todas sus instancias.
+
+Ejemplo típico donde ayudan mucho: un catálogo (productos, tarjetas de usuarios, noticias). En lugar de copiar/pegar el mismo HTML, defines un componente `TarjetaProducto` y lo renderizas para cada producto de una lista.
+
 ---
 
 ## 2) Props: la forma en que fluyen los datos
 
 Los props son "atributos" que le pasas a un componente para personalizarlo. Si un componente es un molde de galletas, los props son los ingredientes que cambias para obtener galletas diferentes.
+
+Recordatorio rápido: en HTML, un **atributo** es información adicional dentro de una etiqueta, por ejemplo:
+
+```html
+<img src="foto.jpg" alt="Descripción de la imagen" width="200" />
+```
+
+Aquí, `src`, `alt` y `width` son atributos de la etiqueta `img`. En React, los props cumplen un papel muy similar, pero para tus componentes personalizados.
 
 ```jsx
 function TarjetaPersona(props) {
@@ -148,6 +164,35 @@ Resultado:
 
 ---
 
+## 3.1) Mini introducción a Arrays y Objetos (súper básica)
+
+- **Array**: es una lista ordenada de cosas. Se escribe con corchetes `[]`.
+  ```js
+  const numeros = [1, 2, 3];
+  const nombres = ["Ana", "Luis", "Mía"];
+  ```
+- **Objeto**: es un conjunto de pares `clave: valor`. Se escribe con llaves `{}`.
+  ```js
+  const persona = { nombre: "Ana", edad: 25 };
+  ```
+- **Array de objetos**: lista de varios objetos. Perfecto para `.map()` en React.
+  ```js
+  const personas = [
+    { nombre: "Ana", edad: 25 },
+    { nombre: "Luis", edad: 30 }
+  ];
+  ```
+
+Con `.map()` puedes transformar cada objeto en un componente:
+
+```jsx
+{personas.map((p) => (
+  <TarjetaPersona nombre={p.nombre} edad={p.edad} />
+))}
+```
+
+---
+
 ## 4) Crea el proyecto con Vite (React, JavaScript)
 
 Ejecuta estos comandos en la terminal, uno por uno:
@@ -191,86 +236,230 @@ export default App;
 
 ---
 
-## 5) Ejercicios progresivos (diversión + práctica real)
+## 5) ¿Cómo hago un ejercicio? (mini paso a paso)
 
-Regla: No usaremos hooks ni lógica interactiva. Solo props, `.map()` y `.filter()`.
+1. Lee el enunciado del ejercicio y revisa el array de datos.
+2. Crea el componente tarjeta (función) que mostrará un ítem del array. Decide qué props necesita.
+3. En `App`, pega el array de datos y usa `.map()` para renderizar el componente por cada elemento.
+4. Si el enunciado lo pide, aplica `.filter()` antes del `.map()`.
+5. Usa `console.log(props)` dentro del componente para ver qué recibes.
 
-### Ejercicio 1 — Fórmula 1: Lista simple con nombre y equipo
-
-Misión: Tu escudería necesita una página con los pilotos destacados. Renderiza la grilla de pilotos a partir de un array.
+Ejemplo mínimo (F1) de cómo podrías encararlo:
 
 ```jsx
 function TarjetaPiloto(props) {
-  // console.log("Props del piloto:", props);
   return (
-    <div className="bg-white border-2 border-gray-200 rounded-lg p-4 shadow-md">
-      <div className="flex items-center gap-3 mb-2">
-        <div className="text-2xl" title={props.nacionalidad}>{props.bandera}</div>
-        <h3 className="text-xl font-bold text-red-600">#{props.numero} {props.nombre}</h3>
-      </div>
-      <p className="text-gray-700">
-        Equipo: <span className="font-medium">{props.equipo}</span>
-      </p>
-      <p className="text-gray-600">Nacionalidad: {props.nacionalidad}</p>
-      <div className="mt-2 text-sm text-gray-600">
-        <p>Victorias totales: {props.victorias}</p>
-        <p>Podios: {props.podios}</p>
-      </div>
+    <div>
+      <h3>#{props.numero} {props.nombre}</h3>
+      <p>Equipo: {props.equipo}</p>
     </div>
   );
 }
 
 function App() {
   const pilotos = [
-    { nombre: "Max Verstappen", numero: 1, equipo: "Red Bull Racing", nacionalidad: "Holanda", bandera: "🇳🇱", victorias: 60, podios: 100 },
-    { nombre: "Lewis Hamilton", numero: 44, equipo: "Mercedes", nacionalidad: "Reino Unido", bandera: "🇬🇧", victorias: 103, podios: 197 },
-    { nombre: "Charles Leclerc", numero: 16, equipo: "Ferrari", nacionalidad: "Mónaco", bandera: "🇲🇨", victorias: 6, podios: 40 },
-    { nombre: "Lando Norris", numero: 4, equipo: "McLaren", nacionalidad: "Reino Unido", bandera: "🇬🇧", victorias: 1, podios: 20 },
-    { nombre: "George Russell", numero: 63, equipo: "Mercedes", nacionalidad: "Reino Unido", bandera: "🇬🇧", victorias: 1, podios: 12 },
-    { nombre: "Carlos Sainz", numero: 55, equipo: "Ferrari", nacionalidad: "España", bandera: "🇪🇸", victorias: 3, podios: 25 },
-    { nombre: "Fernando Alonso", numero: 14, equipo: "Aston Martin", nacionalidad: "España", bandera: "🇪🇸", victorias: 32, podios: 106 }
+    { nombre: "Piloto A", numero: 7, equipo: "Escudería X" },
+    { nombre: "Piloto B", numero: 11, equipo: "Escudería Y" }
   ];
 
-  // 🎉 Easter egg de consola
-  console.log("🏁 Pilotos listos:", pilotos.length);
-
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold text-center mb-8">🏎️ Pilotos de F1 2024</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {pilotos.map((piloto) => (
-          <TarjetaPiloto 
-            nombre={piloto.nombre}
-            numero={piloto.numero}
-            equipo={piloto.equipo}
-            nacionalidad={piloto.nacionalidad}
-            bandera={piloto.bandera}
-            victorias={piloto.victorias}
-            podios={piloto.podios}
-          />
-        ))}
-      </div>
+    <div>
+      {pilotos.map((p) => (
+        <TarjetaPiloto nombre={p.nombre} numero={p.numero} equipo={p.equipo} />
+      ))}
     </div>
   );
 }
-
-export default App;
 ```
 
-- [ ] Descomenta el `console.log` y mira la consola del navegador
-- [ ] Agrega un nuevo piloto
-- [ ] Cambia estilos con Tailwind
+---
+
+## 6) Ejercicios (solo enunciado + array de datos)
+
+Sigue el mini paso a paso anterior para resolver cada uno.
+
+### Ejercicio 1 — Fórmula 1
+
+Misión: Tu escudería necesita una grilla con pilotos destacados. Crea una `TarjetaPiloto` con nombre, número y equipo. Bonus: muestra bandera y estadísticas si existen.
+
+Array de datos:
+
+```js
+const pilotos = [
+  { nombre: "Max Verstappen", numero: 1, equipo: "Red Bull Racing", nacionalidad: "Holanda", bandera: "🇳🇱", victorias: 60, podios: 100 },
+  { nombre: "Lewis Hamilton", numero: 44, equipo: "Mercedes", nacionalidad: "Reino Unido", bandera: "🇬🇧", victorias: 103, podios: 197 },
+  { nombre: "Charles Leclerc", numero: 16, equipo: "Ferrari", nacionalidad: "Mónaco", bandera: "🇲🇨", victorias: 6, podios: 40 },
+  { nombre: "Lando Norris", numero: 4, equipo: "McLaren", nacionalidad: "Reino Unido", bandera: "🇬🇧", victorias: 1, podios: 20 },
+  { nombre: "George Russell", numero: 63, equipo: "Mercedes", nacionalidad: "Reino Unido", bandera: "🇬🇧", victorias: 1, podios: 12 },
+  { nombre: "Carlos Sainz", numero: 55, equipo: "Ferrari", nacionalidad: "España", bandera: "🇪🇸", victorias: 3, podios: 25 },
+  { nombre: "Fernando Alonso", numero: 14, equipo: "Aston Martin", nacionalidad: "España", bandera: "🇪🇸", victorias: 32, podios: 106 }
+];
+```
 
 🎉 Modo diversión
-- **Insignia**: 🏁 Maestro de `.map()` si logras mostrar 9+ pilotos
-- **Easter egg**: cambia temporalmente el `map` a forma con llaves para ver cada nombre:
-  ```jsx
-  {pilotos.map((piloto) => {
-    console.log("⏩ Iterando piloto:", piloto.nombre);
-    return <TarjetaPiloto {...piloto} />;
-  })}
-  ```
-- **Bonus**: muestra una medalla 🥇 junto al nombre si `victorias > 50`
+- Insignia: 🏁 Maestro de `.map()` si renderizas 9+ pilotos
+- Bonus: añade 🥇 si `victorias > 50`
+
+---
+
+### Ejercicio 2 — The Big Bang Theory
+
+Misión: El fan club quiere tarjetas con detalles de los personajes. Crea `TarjetaPersonaje` con nombre, profesión, ciudad y nivelGeek. Bonus: muestra cita si existe.
+
+Array de datos:
+
+```js
+const personajes = [
+  { nombre: "Sheldon Cooper", profesion: "Físico Teórico", descripcion: "Genio obsesivo con falta de habilidades sociales", emoji: "🤓", ciudad: "Pasadena", nivelGeek: 10, cita: "Bazinga!" },
+  { nombre: "Leonard Hofstadter", profesion: "Físico Experimental", descripcion: "El más normal del grupo", emoji: "👨‍🔬", ciudad: "Pasadena", nivelGeek: 8, cita: "Somos amigos, Sheldon." },
+  { nombre: "Penny", profesion: "Actriz/Camarera", descripcion: "Vecina y mejor amiga del grupo", emoji: "👱‍♀️", ciudad: "Pasadena", nivelGeek: 4 },
+  { nombre: "Howard Wolowitz", profesion: "Ingeniero Aeroespacial", descripcion: "Ingeniero con complejo de mamá", emoji: "👨‍🚀", ciudad: "Pasadena", nivelGeek: 7 },
+  { nombre: "Raj Koothrappali", profesion: "Astrofísico", descripcion: "No puede hablar con mujeres (sin alcohol)", emoji: "🔭", ciudad: "Pasadena", nivelGeek: 7 },
+  { nombre: "Amy Farrah Fowler", profesion: "Neurobióloga", descripcion: "Novia de Sheldon, igual de peculiar", emoji: "🧠", ciudad: "Pasadena", nivelGeek: 9 },
+  { nombre: "Bernadette", profesion: "Microbióloga", descripcion: "Esposa de Howard, pequeña pero temible", emoji: "🔬", ciudad: "Pasadena", nivelGeek: 8 }
+];
+```
+
+🎉 Modo diversión
+- Insignia: 🧩 Domador de Props si agregas 3 props nuevas a 3 personajes
+- Bonus: etiqueta “ULTRA GEEK 💥” si `nivelGeek >= 9`
+
+---
+
+### Ejercicio 3 — Piratas del Caribe
+
+Misión: El museo naval quiere fichas con habilidades y barco. Crea `TarjetaPirata` que muestre nombre, título, habilidades y barco. Bonus: agrega `tesoro` y `recompensa`.
+
+Array de datos:
+
+```js
+const piratas = [
+  { nombre: "Jack Sparrow", titulo: "Capitán del Perla Negra", emoji: "🏴‍☠️", habilidades: { espada: 8, navegacion: 10, liderazgo: 7 }, barco: { nombre: "Perla Negra", tipo: "Galeón" }, recompensa: { monedas: 50000, estado: "Vivo o Muerto" } },
+  { nombre: "Barbossa", titulo: "Capitán Maldito", emoji: "💀", habilidades: { espada: 9, navegacion: 8, liderazgo: 9 }, barco: { nombre: "Perla Negra", tipo: "Galeón" }, recompensa: { monedas: 80000, estado: "Vivo o Muerto" } },
+  { nombre: "Will Turner", titulo: "Herrero y Pirata", emoji: "⚔️", habilidades: { espada: 10, navegacion: 6, liderazgo: 8 }, barco: { nombre: "Holandés Errante", tipo: "Barco Fantasma" }, recompensa: { monedas: 30000, estado: "Vivo" } },
+  { nombre: "Elizabeth Swann", titulo: "Rey de los Piratas", emoji: "👑", habilidades: { espada: 7, navegacion: 7, liderazgo: 10 }, barco: { nombre: "Emperatriz", tipo: "Junco Chino" }, recompensa: { monedas: 70000, estado: "Vivo" } },
+  { nombre: "Davy Jones", titulo: "Señor de los Mares", emoji: "🐙", habilidades: { espada: 9, navegacion: 10, liderazgo: 10 }, barco: { nombre: "Holandés Errante", tipo: "Barco Fantasma" }, recompensa: { monedas: 100000, estado: "Muerto o Vivo" } },
+  { nombre: "Blackbeard", titulo: "El Pirata más Temido", emoji: "🔥", habilidades: { espada: 10, navegacion: 9, liderazgo: 9 }, barco: { nombre: "Venganza de la Reina Ana", tipo: "Fragata" }, recompensa: { monedas: 120000, estado: "Vivo o Muerto" } },
+  { nombre: "Angelica", titulo: "Hija de Blackbeard", emoji: "⚡", habilidades: { espada: 8, navegacion: 7, liderazgo: 8 }, barco: { nombre: "Venganza de la Reina Ana", tipo: "Fragata" }, recompensa: { monedas: 45000, estado: "Vivo" } }
+];
+```
+
+🎉 Modo diversión
+- Insignia: 💰 Cazador de Tesoros si agregas y muestras `tesoro` en los 7 piratas
+- Bonus: ⚔️ junto al nombre si `habilidades.espada >= 9`
+
+---
+
+### Ejercicio 4 — El Señor de los Anillos
+
+Misión: La biblioteca de Minas Tirith necesita secciones por raza y origen. Crea `TarjetaPersonaje` y muestra varias secciones filtradas.
+
+Array de datos:
+
+```js
+const personajes = [
+  { nombre: "Frodo Baggins", raza: "Hobbit", descripcion: "Portador del Anillo Único", arma: "Dardo y Mithril", origen: "Bolsón Cerrado", alineacion: "Bien", vivo: true, emoji: "🧙‍♂️" },
+  { nombre: "Aragorn", raza: "Humano", descripcion: "Rey de Gondor", arma: "Andúril", origen: "Gondor", alineacion: "Bien", vivo: true, emoji: "👑" },
+  { nombre: "Legolas", raza: "Elfo", descripcion: "Príncipe de los Elfos del Bosque", arma: "Arco Élfico", origen: "Reino del Bosque", alineacion: "Bien", vivo: true, emoji: "🏹" },
+  { nombre: "Gimli", raza: "Enano", descripcion: "Guerrero de la Montaña Solitaria", arma: "Hacha de Guerra", origen: "Erebor", alineacion: "Bien", vivo: true, emoji: "⚔️" },
+  { nombre: "Gandalf", raza: "Mago", descripcion: "El Gris que se volvió Blanco", arma: "Bastón y Glamdring", origen: "Valinor", alineacion: "Bien", vivo: true, emoji: "🧙‍♂️" },
+  { nombre: "Boromir", raza: "Humano", descripcion: "Hijo del Senescal de Gondor", arma: "Espada y Escudo", origen: "Minas Tirith", alineacion: "Bien", vivo: false, emoji: "🛡️" },
+  { nombre: "Sam Gamyi", raza: "Hobbit", descripcion: "Fiel jardinero y amigo", arma: "Dardo", origen: "Bolsón Cerrado", alineacion: "Bien", vivo: true, emoji: "🌱" }
+];
+```
+
+🎉 Modo diversión
+- Insignia: 🔎 Detective de `.filter()` si creas 3 secciones distintas (por raza/origen)
+- Bonus: “HÉROE ⭐” si `alineacion === 'Bien'` y `vivo === true`
+
+---
+
+### Ejercicio 5 — Harry Potter
+
+Misión: Hogwarts quiere fichas detalladas con hechizos (array), atributos (objeto), varita (opcional) y clubes. Crea `TarjetaPersonaje` y secciones filtradas.
+
+Array de datos:
+
+```js
+const personajesHP = [
+  { nombre: "Harry Potter", casa: "Gryffindor", descripcion: "El niño que vivió", emoji: "⚡", hechizos: ["Expelliarmus", "Expecto Patronum", "Lumos"], clubes: ["Quidditch", "Ejército de Dumbledore"], atributos: { valentia: 10, inteligencia: 7, poderMagico: 9 }, varita: { descripcion: "Acebo, 11 pulgadas", nucleo: "Pluma de fénix" } },
+  { nombre: "Hermione Granger", casa: "Gryffindor", descripcion: "La bruja más brillante de su generación", emoji: "📚", hechizos: ["Wingardium Leviosa", "Alohomora", "Protean Charm"], clubes: ["Ejército de Dumbledore", "Sociedad de Defensa"], atributos: { valentia: 8, inteligencia: 10, poderMagico: 9 }, varita: { descripcion: "Vid, 10¾ pulgadas", nucleo: "Fibra de corazón de dragón" } },
+  { nombre: "Ron Weasley", casa: "Gryffindor", descripcion: "Fiel amigo y estratega de ajedrez", emoji: "♟️", hechizos: ["Sunshine, Daisies", "Eat Slugs", "Expelliarmus"], clubes: ["Quidditch"], atributos: { valentia: 8, inteligencia: 6, poderMagico: 7 }, varita: { descripcion: "Sauce, 14 pulgadas", nucleo: "Pelo de unicornio" } },
+  { nombre: "Draco Malfoy", casa: "Slytherin", descripcion: "Rival de Harry y heredero sangre pura", emoji: "🐍", hechizos: ["Serpensortia", "Tarantallegra", "Crucio"], clubes: ["Club de Slug"], atributos: { valentia: 6, inteligencia: 8, poderMagico: 8 }, varita: { descripcion: "Espino, 10 pulgadas", nucleo: "Pelo de unicornio" } },
+  { nombre: "Luna Lovegood", casa: "Ravenclaw", descripcion: "Excéntrica y sabia soñadora", emoji: "🌙", hechizos: ["Expecto Patronum", "Stupefy", "Revelio"], clubes: ["El Quisquilloso"], atributos: { valentia: 7, inteligencia: 9, poderMagico: 8 }, varita: { descripcion: "Cerezo, 9 pulgadas", nucleo: "Pelo de thestrals" } },
+  { nombre: "Neville Longbottom", casa: "Gryffindor", descripcion: "De tímido estudiante a héroe valiente", emoji: "🌱", hechizos: ["Petrificus Totalus", "Expelliarmus", "Stupefy"], clubes: ["Herbología", "Ejército de Dumbledore"], atributos: { valentia: 9, inteligencia: 6, poderMagico: 7 }, varita: { descripcion: "Cerezo, 13 pulgadas", nucleo: "Pelo de unicornio" } },
+  { nombre: "Severus Snape", casa: "Slytherin", descripcion: "Profesor de Pociones y espía doble", emoji: "🧪", hechizos: ["Sectumsempra", "Legilimens", "Protego"], clubes: [], atributos: { valentia: 8, inteligencia: 10, poderMagico: 10 }, varita: { descripcion: "Abedul, 13¼ pulgadas", nucleo: "Fibra de corazón de dragón" } },
+  { nombre: "Dobby", casa: null, descripcion: "Elfo doméstico libre y leal amigo", emoji: "🧦", hechizos: ["Magia Élfica", "Aparición", "Levitación"], clubes: [], atributos: { valentia: 10, inteligencia: 7, poderMagico: 8 }, varita: null }
+];
+```
+
+🎉 Modo diversión
+- Insignia: 🧙 Hechicero del Render Condicional si usas 3 condicionales (casa, varita, clubes)
+- Bonus: ⚡ junto al nombre si `atributos.poderMagico >= 9`
+
+---
+
+## 7) Identifica conceptos + Quiz básico
+
+### Identifica en este snippet
+
+```jsx
+function Tarjeta(props) {
+  return <div className="card">Hola {props.nombre}</div>;
+}
+
+function App() {
+  const usuarios = [
+    { nombre: "Ana" },
+    { nombre: "Luis" },
+    { nombre: "Mía" }
+  ];
+
+  return (
+    <div>
+      {usuarios.map((u) => (
+        <Tarjeta nombre={u.nombre} />
+      ))}
+    </div>
+  );
+}
+```
+
+- ¿Cuál es el nombre del componente hijo? (responde mentalmente)
+- ¿Cómo se llama el prop que recibe `Tarjeta`?
+- ¿Qué método de array se utiliza para repetir el componente?
+
+### Quiz de LiaScript (selección múltiple)
+
+?[Es de opción múltiple] ¿Qué afirmación es correcta sobre props?
+- [ ] Son variables globales compartidas por todos los componentes
+- [x] Son valores que se pasan del componente padre al hijo
+- [ ] Se pueden cambiar desde el hijo para afectar al padre
+- [x] Se leen dentro del hijo con `props.algo` o desestructurando `{ algo }`
+
+### Mini-ejemplo: componente con input (sin hooks)
+
+```jsx
+function CampoEtiqueta(props) {
+  return (
+    <label className="block">
+      <span className="text-sm text-gray-700">{props.etiqueta}</span>
+      <input className="border p-2 rounded w-full" placeholder={props.placeholder} />
+    </label>
+  );
+}
+
+function App() {
+  return (
+    <div className="p-4">
+      <CampoEtiqueta etiqueta="Nombre" placeholder="Escribe tu nombre" />
+      <CampoEtiqueta etiqueta="Email" placeholder="tucorreo@ejemplo.com" />
+    </div>
+  );
+}
+```
+
+Observa que el input no es interactivo con estado en este curso: solo demostramos cómo un componente puede renderizar un `input` utilizando props para su etiqueta y placeholder.
 
 ---
 
